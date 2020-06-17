@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from ..cache import Cache, wrap_client_exception, ClientError
 from redis import StrictRedis, RedisError
+from ..cache import Cache
+from ..error import ClientError
+from ..util import wrap_client_exception
 
 
 class RedisClientError(ClientError):

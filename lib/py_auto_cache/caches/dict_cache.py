@@ -4,7 +4,9 @@ Created by yanghg at 18-5-7 下午5:41
 """
 import time
 import fnmatch
-from ..cache import Cache, ClientError, wrap_client_exception
+from ..cache import Cache
+from ..error import ClientError
+from ..util import wrap_client_exception, transcode
 
 
 class DictClientError(ClientError):
@@ -20,21 +22,6 @@ class ParameterError(DictClientError):
 
 
 dict_error_wrapper = wrap_client_exception((IndexError, KeyError, ValueError), DictClientError)
-
-
-def transcode(s1):
-    """
-    Transcode the given string/unicode/other-object to utf-8 str
-
-    :param s1:
-    :return:
-    """
-    if isinstance(s1, str):
-        return s1
-    elif isinstance(s1, unicode):
-        return s1.encode('utf-8')
-    else:
-        return str(s1)
 
 
 class DictCache(Cache):

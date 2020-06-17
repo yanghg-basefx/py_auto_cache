@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import inspect
 import time
+from functools import partial
 
 try:
     import cPickle as pickle
@@ -56,7 +57,7 @@ class AutoCache(CacheWrapper):
         # to what wrappers in the decorator
         self._wrappers_map = {}
 
-    def decorator(self, func):
+    def decorator(self, func=None, key=None):
         """
         A function decorator to wrap any other function in boilerplate code.
 
@@ -75,6 +76,14 @@ class AutoCache(CacheWrapper):
         to force it to evaluate the underlying function, and to update the
         cache again regardless of what is already in the cache.
         """
+        if func is None:
+            return partial(self.decorator, key=key)
+        func.__bind_key__ = key
+        func.__full_cache_prefix__ = '{mn}{sep}{func}{sep}'.format(
+            sep=self.sep,
+            mn=inspect.getmodule(func).__name__,
+            func=func.__name__,
+        )
 
         def wrapper(*args, **kwargs):
             # We allow users to force the wrapper to ignore any pre-existing
@@ -89,6 +98,7 @@ class AutoCache(CacheWrapper):
 
         # When this decorator is applied to a function, we keep track of it so
         # we can access the original function later.
+        wrapper.__source_func__ = func
         self._wrappers_map[wrapper] = func
         return wrapper
 
@@ -158,11 +168,13 @@ class AutoCache(CacheWrapper):
 
         :rtype: basestring
         """
-        return '{mn}{sep}{func}{sep}{args}'.format(
-            sep=self.sep,
-            mn=inspect.getmodule(func).__name__,
-            func=func.__name__,
-            args=pickle.dumps([args, kwargs]),
+        if callable(func.__bind_key__):
+            params = func.__bind_key__(*args, **kwargs)
+        else:
+            params = [args, kwargs]
+        return '{full_prefix}{args}'.format(
+            full_prefix=func.__full_cache_prefix__,
+            args=pickle.dumps(params),
         )
 
     def _update_cache(self, func, args, kwargs):

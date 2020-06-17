@@ -4,6 +4,7 @@ from .error import HostError
 from .cache import Cache
 
 from .caches import DictCache as DefaultCache
+from .util import transcode
 
 logger = getLogger('py_auto_cache')
 logger.addHandler(StreamHandler())
@@ -317,12 +318,18 @@ class CacheWrapper(object):
 
 
 def _remove_prefix(key, prefix):
+    if type(key) != type(prefix):
+        key = transcode(key)
+        prefix = transcode(prefix)
     if key.startswith(prefix):
         key = key[len(prefix):]
     return key
 
 
 def _remove_suffix(key, suffix):
+    if type(key) != type(suffix):
+        key = transcode(key)
+        suffix = transcode(suffix)
     if key.endswith(suffix):
         key = key[:-len(suffix)]
     return key

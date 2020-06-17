@@ -8,7 +8,9 @@ import hashlib
 import time
 import fnmatch
 import tempfile
-from ..cache import Cache, ClientError, wrap_client_exception
+from ..cache import Cache
+from ..error import ClientError
+from ..util import wrap_client_exception, transcode
 
 
 class FileClientError(ClientError):
@@ -24,21 +26,6 @@ class ParameterError(FileClientError):
 
 
 file_error_wrapper = wrap_client_exception((IndexError, KeyError, ValueError, IOError), FileClientError)
-
-
-def transcode(s1):
-    """
-    Transcode the given string/unicode/other-object to utf-8 str
-
-    :param s1:
-    :return:
-    """
-    if isinstance(s1, str):
-        return s1
-    elif isinstance(s1, unicode):
-        return s1.encode('utf-8')
-    else:
-        return str(s1)
 
 
 def get_md5(key):

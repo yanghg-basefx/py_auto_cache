@@ -54,3 +54,9 @@ class DoNotCacheException(AutoCacheError):
         super(DoNotCacheException, self).__init__()
 
         self.return_value = return_value
+
+
+class ClientError(CacheError):
+    """
+    Base class for all errors come from client
+    """
