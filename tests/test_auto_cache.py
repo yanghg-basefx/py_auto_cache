@@ -8,7 +8,7 @@ from py_auto_cache import *
 from py_auto_cache.caches import RedisCache
 
 run_times = 0
-auto_cache = get_auto_cache('unittest', 3600, RedisCache(os.environ.get('REDIS_HOST', 'cache.base-fx.com')))
+auto_cache = get_auto_cache('unittest', 3600, RedisCache(os.environ.get('REDIS_HOST', 'localhost')))
 
 
 @auto_cache.decorator
