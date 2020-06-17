@@ -1,13 +1,15 @@
-AutoRedis
+AutoCache
 ==================================================
 
 Overview
 --------------------------------------------------
 
-This is a package that implements an easy-to-use framework for using redis based caches.
+This is a package that implements an easy-to-use framework for 
+using redis, file, disk based caches even a distribute cache dispatcher.
 
-It provides some classes and function that make it very easy to decorate your functions in
-boilerplate code that handles caching of function calls in a redis cache within a namespace.
+It provides some classes and function that make it very easy to 
+decorate your functions in boilerplate code that 
+handles caching of function calls in a cache within a namespace.
 
 
 Dependence
